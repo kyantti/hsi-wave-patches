@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 from torch.utils.data import Dataset
-from skimage import io
+from PIL import Image
 
 NUM_WORKERS = os.cpu_count() if os.cpu_count() is not None else 0
 
@@ -24,7 +24,7 @@ class WaveletDataset(Dataset):
 
     def __getitem__(self, idx):
         img_path = str(self.img_labels.iloc[idx, 0])
-        image = io.imread(img_path)
+        image = Image.open(img_path).convert("RGB")
         label = self.img_labels.iloc[idx, 1]
         if self.transform:
             image = self.transform(image)
