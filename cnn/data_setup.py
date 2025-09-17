@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 from torch.utils.data import Dataset
+import torch
 from skimage import io
 from PIL import Image
 NUM_WORKERS = os.cpu_count() if os.cpu_count() is not None else 0
@@ -18,18 +19,27 @@ class WaveletDataset(Dataset):
         self.img_labels = pd.read_csv(csv_file)
         self.transform = transform
         self.target_transform = target_transform
+        self.classes = self.img_labels['class'].unique()
+        self.class_to_idx = {cls_name: i for i, cls_name in enumerate(self.classes)}
 
     def __len__(self):
         return len(self.img_labels)
 
     def __getitem__(self, idx):
+
+        if torch.is_tensor(idx):
+            idx = idx.tolist()
+
         img_path = str(self.img_labels.iloc[idx, 0])
         #image = io.imread(img_path)
         image = Image.open(img_path).convert("RGB")
-        label = self.img_labels.iloc[idx, 1]
+        class_name = self.img_labels.iloc[idx, 1]
+        label = self.class_to_idx[class_name]
+
         if self.transform:
             image = self.transform(image)
-        if self.target_transform:
+        if self.target_transform:   
             label = self.target_transform(label)
+        
         return image, label
 
