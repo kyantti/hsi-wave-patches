@@ -1,0 +1,19 @@
+[project]
+name = "hsi-wave-patches"
+version = "0.1.0"
+description = "Hyperspectral image processing with wavelet transforms for patch extraction"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "matplotlib>=3.10.6",
+    "numpy>=2.3.2",
+    "pandas>=2.3.2",
+    "pywavelets>=1.9.0",
+    "opencv-python>=4.10.0",
+    "scikit-learn>=1.7.1",
+    "torch>=2.7.1",
+    "torcheval>=0.0.7",
+    "torchinfo>=1.8.0",
+    "torchvision>=0.22.1",
+    "scikit-image>=0.25.2",
+]
