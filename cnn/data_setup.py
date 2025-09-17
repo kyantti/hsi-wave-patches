@@ -24,6 +24,7 @@ class WaveletDataset(Dataset):
 
     def __getitem__(self, idx):
         img_path = str(self.img_labels.iloc[idx, 0])
+        # Convert to RGB to ensure 3-channel images for ResNet compatibility
         image = Image.open(img_path).convert("RGB")
         label = self.img_labels.iloc[idx, 1]
         if self.transform:
