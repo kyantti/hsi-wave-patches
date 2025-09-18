@@ -1,0 +1,165 @@
+Class names found: ['C0', 'C1', 'C2', 'C3']
+=============================================================================================================================
+Layer (type (var_name))                       Input Shape          Output Shape         Param #              Trainable
+=============================================================================================================================
+DenseNet (DenseNet)                           [64, 3, 224, 224]    [64, 4]              --                   True
+├─Sequential (features)                       [64, 3, 224, 224]    [64, 1024, 7, 7]     --                   True
+│    └─Conv2d (conv0)                         [64, 3, 224, 224]    [64, 64, 112, 112]   9,408                True
+│    └─BatchNorm2d (norm0)                    [64, 64, 112, 112]   [64, 64, 112, 112]   128                  True
+│    └─ReLU (relu0)                           [64, 64, 112, 112]   [64, 64, 112, 112]   --                   --
+│    └─MaxPool2d (pool0)                      [64, 64, 112, 112]   [64, 64, 56, 56]     --                   --
+│    └─_DenseBlock (denseblock1)              [64, 64, 56, 56]     [64, 256, 56, 56]    --                   True
+│    │    └─_DenseLayer (denselayer1)         [64, 64, 56, 56]     [64, 32, 56, 56]     45,440               True
+│    │    └─_DenseLayer (denselayer2)         [64, 64, 56, 56]     [64, 32, 56, 56]     49,600               True
+│    │    └─_DenseLayer (denselayer3)         [64, 64, 56, 56]     [64, 32, 56, 56]     53,760               True
+│    │    └─_DenseLayer (denselayer4)         [64, 64, 56, 56]     [64, 32, 56, 56]     57,920               True
+│    │    └─_DenseLayer (denselayer5)         [64, 64, 56, 56]     [64, 32, 56, 56]     62,080               True
+│    │    └─_DenseLayer (denselayer6)         [64, 64, 56, 56]     [64, 32, 56, 56]     66,240               True
+│    └─_Transition (transition1)              [64, 256, 56, 56]    [64, 128, 28, 28]    --                   True
+│    │    └─BatchNorm2d (norm)                [64, 256, 56, 56]    [64, 256, 56, 56]    512                  True
+│    │    └─ReLU (relu)                       [64, 256, 56, 56]    [64, 256, 56, 56]    --                   --
+│    │    └─Conv2d (conv)                     [64, 256, 56, 56]    [64, 128, 56, 56]    32,768               True
+│    │    └─AvgPool2d (pool)                  [64, 128, 56, 56]    [64, 128, 28, 28]    --                   --
+│    └─_DenseBlock (denseblock2)              [64, 128, 28, 28]    [64, 512, 28, 28]    --                   True
+│    │    └─_DenseLayer (denselayer1)         [64, 128, 28, 28]    [64, 32, 28, 28]     53,760               True
+│    │    └─_DenseLayer (denselayer2)         [64, 128, 28, 28]    [64, 32, 28, 28]     57,920               True
+│    │    └─_DenseLayer (denselayer3)         [64, 128, 28, 28]    [64, 32, 28, 28]     62,080               True
+│    │    └─_DenseLayer (denselayer4)         [64, 128, 28, 28]    [64, 32, 28, 28]     66,240               True
+│    │    └─_DenseLayer (denselayer5)         [64, 128, 28, 28]    [64, 32, 28, 28]     70,400               True
+│    │    └─_DenseLayer (denselayer6)         [64, 128, 28, 28]    [64, 32, 28, 28]     74,560               True
+│    │    └─_DenseLayer (denselayer7)         [64, 128, 28, 28]    [64, 32, 28, 28]     78,720               True
+│    │    └─_DenseLayer (denselayer8)         [64, 128, 28, 28]    [64, 32, 28, 28]     82,880               True
+│    │    └─_DenseLayer (denselayer9)         [64, 128, 28, 28]    [64, 32, 28, 28]     87,040               True
+│    │    └─_DenseLayer (denselayer10)        [64, 128, 28, 28]    [64, 32, 28, 28]     91,200               True
+│    │    └─_DenseLayer (denselayer11)        [64, 128, 28, 28]    [64, 32, 28, 28]     95,360               True
+│    │    └─_DenseLayer (denselayer12)        [64, 128, 28, 28]    [64, 32, 28, 28]     99,520               True
+│    └─_Transition (transition2)              [64, 512, 28, 28]    [64, 256, 14, 14]    --                   True
+│    │    └─BatchNorm2d (norm)                [64, 512, 28, 28]    [64, 512, 28, 28]    1,024                True
+│    │    └─ReLU (relu)                       [64, 512, 28, 28]    [64, 512, 28, 28]    --                   --
+│    │    └─Conv2d (conv)                     [64, 512, 28, 28]    [64, 256, 28, 28]    131,072              True
+│    │    └─AvgPool2d (pool)                  [64, 256, 28, 28]    [64, 256, 14, 14]    --                   --
+│    └─_DenseBlock (denseblock3)              [64, 256, 14, 14]    [64, 1024, 14, 14]   --                   True
+│    │    └─_DenseLayer (denselayer1)         [64, 256, 14, 14]    [64, 32, 14, 14]     70,400               True
+│    │    └─_DenseLayer (denselayer2)         [64, 256, 14, 14]    [64, 32, 14, 14]     74,560               True
+│    │    └─_DenseLayer (denselayer3)         [64, 256, 14, 14]    [64, 32, 14, 14]     78,720               True
+│    │    └─_DenseLayer (denselayer4)         [64, 256, 14, 14]    [64, 32, 14, 14]     82,880               True
+│    │    └─_DenseLayer (denselayer5)         [64, 256, 14, 14]    [64, 32, 14, 14]     87,040               True
+│    │    └─_DenseLayer (denselayer6)         [64, 256, 14, 14]    [64, 32, 14, 14]     91,200               True
+│    │    └─_DenseLayer (denselayer7)         [64, 256, 14, 14]    [64, 32, 14, 14]     95,360               True
+│    │    └─_DenseLayer (denselayer8)         [64, 256, 14, 14]    [64, 32, 14, 14]     99,520               True
+│    │    └─_DenseLayer (denselayer9)         [64, 256, 14, 14]    [64, 32, 14, 14]     103,680              True
+│    │    └─_DenseLayer (denselayer10)        [64, 256, 14, 14]    [64, 32, 14, 14]     107,840              True
+│    │    └─_DenseLayer (denselayer11)        [64, 256, 14, 14]    [64, 32, 14, 14]     112,000              True
+│    │    └─_DenseLayer (denselayer12)        [64, 256, 14, 14]    [64, 32, 14, 14]     116,160              True
+│    │    └─_DenseLayer (denselayer13)        [64, 256, 14, 14]    [64, 32, 14, 14]     120,320              True
+│    │    └─_DenseLayer (denselayer14)        [64, 256, 14, 14]    [64, 32, 14, 14]     124,480              True
+│    │    └─_DenseLayer (denselayer15)        [64, 256, 14, 14]    [64, 32, 14, 14]     128,640              True
+│    │    └─_DenseLayer (denselayer16)        [64, 256, 14, 14]    [64, 32, 14, 14]     132,800              True
+│    │    └─_DenseLayer (denselayer17)        [64, 256, 14, 14]    [64, 32, 14, 14]     136,960              True
+│    │    └─_DenseLayer (denselayer18)        [64, 256, 14, 14]    [64, 32, 14, 14]     141,120              True
+│    │    └─_DenseLayer (denselayer19)        [64, 256, 14, 14]    [64, 32, 14, 14]     145,280              True
+│    │    └─_DenseLayer (denselayer20)        [64, 256, 14, 14]    [64, 32, 14, 14]     149,440              True
+│    │    └─_DenseLayer (denselayer21)        [64, 256, 14, 14]    [64, 32, 14, 14]     153,600              True
+│    │    └─_DenseLayer (denselayer22)        [64, 256, 14, 14]    [64, 32, 14, 14]     157,760              True
+│    │    └─_DenseLayer (denselayer23)        [64, 256, 14, 14]    [64, 32, 14, 14]     161,920              True
+│    │    └─_DenseLayer (denselayer24)        [64, 256, 14, 14]    [64, 32, 14, 14]     166,080              True
+│    └─_Transition (transition3)              [64, 1024, 14, 14]   [64, 512, 7, 7]      --                   True
+│    │    └─BatchNorm2d (norm)                [64, 1024, 14, 14]   [64, 1024, 14, 14]   2,048                True
+│    │    └─ReLU (relu)                       [64, 1024, 14, 14]   [64, 1024, 14, 14]   --                   --
+│    │    └─Conv2d (conv)                     [64, 1024, 14, 14]   [64, 512, 14, 14]    524,288              True
+│    │    └─AvgPool2d (pool)                  [64, 512, 14, 14]    [64, 512, 7, 7]      --                   --
+│    └─_DenseBlock (denseblock4)              [64, 512, 7, 7]      [64, 1024, 7, 7]     --                   True
+│    │    └─_DenseLayer (denselayer1)         [64, 512, 7, 7]      [64, 32, 7, 7]       103,680              True
+│    │    └─_DenseLayer (denselayer2)         [64, 512, 7, 7]      [64, 32, 7, 7]       107,840              True
+│    │    └─_DenseLayer (denselayer3)         [64, 512, 7, 7]      [64, 32, 7, 7]       112,000              True
+│    │    └─_DenseLayer (denselayer4)         [64, 512, 7, 7]      [64, 32, 7, 7]       116,160              True
+│    │    └─_DenseLayer (denselayer5)         [64, 512, 7, 7]      [64, 32, 7, 7]       120,320              True
+│    │    └─_DenseLayer (denselayer6)         [64, 512, 7, 7]      [64, 32, 7, 7]       124,480              True
+│    │    └─_DenseLayer (denselayer7)         [64, 512, 7, 7]      [64, 32, 7, 7]       128,640              True
+│    │    └─_DenseLayer (denselayer8)         [64, 512, 7, 7]      [64, 32, 7, 7]       132,800              True
+│    │    └─_DenseLayer (denselayer9)         [64, 512, 7, 7]      [64, 32, 7, 7]       136,960              True
+│    │    └─_DenseLayer (denselayer10)        [64, 512, 7, 7]      [64, 32, 7, 7]       141,120              True
+│    │    └─_DenseLayer (denselayer11)        [64, 512, 7, 7]      [64, 32, 7, 7]       145,280              True
+│    │    └─_DenseLayer (denselayer12)        [64, 512, 7, 7]      [64, 32, 7, 7]       149,440              True
+│    │    └─_DenseLayer (denselayer13)        [64, 512, 7, 7]      [64, 32, 7, 7]       153,600              True
+│    │    └─_DenseLayer (denselayer14)        [64, 512, 7, 7]      [64, 32, 7, 7]       157,760              True
+│    │    └─_DenseLayer (denselayer15)        [64, 512, 7, 7]      [64, 32, 7, 7]       161,920              True
+│    │    └─_DenseLayer (denselayer16)        [64, 512, 7, 7]      [64, 32, 7, 7]       166,080              True
+│    └─BatchNorm2d (norm5)                    [64, 1024, 7, 7]     [64, 1024, 7, 7]     2,048                True
+├─Sequential (classifier)                     [64, 1024]           [64, 4]              --                   True
+│    └─Linear (0)                             [64, 1024]           [64, 128]            131,200              True
+│    └─ReLU (1)                               [64, 128]            [64, 128]            --                   --
+│    └─BatchNorm1d (2)                        [64, 128]            [64, 128]            256                  True
+│    └─Dropout (3)                            [64, 128]            [64, 128]            --                   --
+│    └─Linear (4)                             [64, 128]            [64, 64]             8,256                True
+│    └─ReLU (5)                               [64, 64]             [64, 64]             --                   --
+│    └─Dropout (6)                            [64, 64]             [64, 64]             --                   --
+│    └─Linear (7)                             [64, 64]             [64, 4]              260                  True
+=============================================================================================================================
+Total params: 7,093,828
+Trainable params: 7,093,828
+Non-trainable params: 0
+Total mult-adds (Units.GIGABYTES): 181.34
+=============================================================================================================================
+Input size (MB): 38.54
+Forward/backward pass size (MB): 11554.29
+Params size (MB): 28.38
+Estimated Total Size (MB): 11621.20
+=============================================================================================================================
+Epoch: 1 | train_loss: 1.3225 | train_acc: 0.3692 | test_loss: 1.6932 | test_acc: 0.3049 | 
+Epoch: 2 | train_loss: 1.2344 | train_acc: 0.4350 | test_loss: 1.4260 | test_acc: 0.3772 | 
+Epoch: 3 | train_loss: 1.1894 | train_acc: 0.4645 | test_loss: 1.5060 | test_acc: 0.3735 | 
+Epoch: 4 | train_loss: 1.1524 | train_acc: 0.4855 | test_loss: 1.2677 | test_acc: 0.4410 | 
+Epoch: 5 | train_loss: 1.1204 | train_acc: 0.5063 | test_loss: 1.1204 | test_acc: 0.4974 | 
+Epoch: 6 | train_loss: 1.0842 | train_acc: 0.5263 | test_loss: 1.2794 | test_acc: 0.4166 | 
+Epoch: 7 | train_loss: 1.0496 | train_acc: 0.5448 | test_loss: 1.3052 | test_acc: 0.4401 | 
+Epoch: 8 | train_loss: 1.0067 | train_acc: 0.5698 | test_loss: 0.9781 | test_acc: 0.5761 | 
+Epoch: 9 | train_loss: 0.9582 | train_acc: 0.5939 | test_loss: 1.3748 | test_acc: 0.4333 | 
+Epoch: 10 | train_loss: 0.9238 | train_acc: 0.6134 | test_loss: 1.1381 | test_acc: 0.5104 | 
+Epoch: 11 | train_loss: 0.8818 | train_acc: 0.6312 | test_loss: 1.1564 | test_acc: 0.5087 | 
+Epoch: 12 | train_loss: 0.8346 | train_acc: 0.6542 | test_loss: 1.0291 | test_acc: 0.5627 | 
+Epoch: 13 | train_loss: 0.7964 | train_acc: 0.6720 | test_loss: 0.9510 | test_acc: 0.6052 | 
+Epoch: 14 | train_loss: 0.7584 | train_acc: 0.6884 | test_loss: 1.8902 | test_acc: 0.4307 | 
+Epoch: 15 | train_loss: 0.7219 | train_acc: 0.7059 | test_loss: 1.3695 | test_acc: 0.5083 | 
+Epoch: 16 | train_loss: 0.6851 | train_acc: 0.7206 | test_loss: 1.1094 | test_acc: 0.5764 | 
+Epoch: 17 | train_loss: 0.6547 | train_acc: 0.7361 | test_loss: 1.5291 | test_acc: 0.5562 | 
+Epoch: 18 | train_loss: 0.6222 | train_acc: 0.7527 | test_loss: 1.2628 | test_acc: 0.5707 | 
+Epoch: 19 | train_loss: 0.5967 | train_acc: 0.7631 | test_loss: 1.6987 | test_acc: 0.5060 | 
+Epoch: 20 | train_loss: 0.5690 | train_acc: 0.7748 | test_loss: 0.9402 | test_acc: 0.6392 | 
+Epoch: 21 | train_loss: 0.5443 | train_acc: 0.7854 | test_loss: 2.3112 | test_acc: 0.4472 | 
+Epoch: 22 | train_loss: 0.5253 | train_acc: 0.7923 | test_loss: 1.2912 | test_acc: 0.5954 | 
+Epoch: 23 | train_loss: 0.5089 | train_acc: 0.7992 | test_loss: 2.3636 | test_acc: 0.4560 | 
+Epoch: 24 | train_loss: 0.4850 | train_acc: 0.8080 | test_loss: 1.8049 | test_acc: 0.5356 | 
+Epoch: 25 | train_loss: 0.4719 | train_acc: 0.8147 | test_loss: 2.5253 | test_acc: 0.4911 | 
+Epoch: 26 | train_loss: 0.4549 | train_acc: 0.8239 | test_loss: 0.5782 | test_acc: 0.7820 | 
+Epoch: 27 | train_loss: 0.4362 | train_acc: 0.8322 | test_loss: 2.0304 | test_acc: 0.4998 | 
+Epoch: 28 | train_loss: 0.4170 | train_acc: 0.8386 | test_loss: 0.9307 | test_acc: 0.6828 | 
+Epoch: 29 | train_loss: 0.4086 | train_acc: 0.8412 | test_loss: 0.9305 | test_acc: 0.6805 | 
+Epoch: 30 | train_loss: 0.3908 | train_acc: 0.8487 | test_loss: 0.6537 | test_acc: 0.7543 | 
+Epoch: 31 | train_loss: 0.3855 | train_acc: 0.8527 | test_loss: 0.6638 | test_acc: 0.7608 | 
+Epoch: 32 | train_loss: 0.3670 | train_acc: 0.8589 | test_loss: 3.1153 | test_acc: 0.4134 | 
+Epoch: 33 | train_loss: 0.3552 | train_acc: 0.8660 | test_loss: 0.6352 | test_acc: 0.7700 | 
+Epoch: 34 | train_loss: 0.3496 | train_acc: 0.8671 | test_loss: 0.5559 | test_acc: 0.7956 | 
+Epoch: 35 | train_loss: 0.3391 | train_acc: 0.8700 | test_loss: 2.1384 | test_acc: 0.5590 | 
+Epoch: 36 | train_loss: 0.3230 | train_acc: 0.8766 | test_loss: 2.3268 | test_acc: 0.5251 | 
+Epoch: 37 | train_loss: 0.3213 | train_acc: 0.8776 | test_loss: 1.4007 | test_acc: 0.6198 | 
+Epoch: 38 | train_loss: 0.3066 | train_acc: 0.8835 | test_loss: 1.2978 | test_acc: 0.6687 | 
+Epoch: 39 | train_loss: 0.2994 | train_acc: 0.8866 | test_loss: 0.9063 | test_acc: 0.7073 | 
+Epoch: 40 | train_loss: 0.2909 | train_acc: 0.8897 | test_loss: 2.5766 | test_acc: 0.5114 | 
+Epoch: 41 | train_loss: 0.2810 | train_acc: 0.8933 | test_loss: 1.4530 | test_acc: 0.6130 | 
+Epoch: 42 | train_loss: 0.2747 | train_acc: 0.8979 | test_loss: 1.1126 | test_acc: 0.6720 | 
+Epoch: 43 | train_loss: 0.2632 | train_acc: 0.9019 | test_loss: 2.3292 | test_acc: 0.5357 | 
+Epoch: 44 | train_loss: 0.2595 | train_acc: 0.9036 | test_loss: 0.4761 | test_acc: 0.8342 | 
+Epoch: 45 | train_loss: 0.2539 | train_acc: 0.9036 | test_loss: 2.0959 | test_acc: 0.5561 | 
+Epoch: 46 | train_loss: 0.2452 | train_acc: 0.9084 | test_loss: 3.3955 | test_acc: 0.4650 | 
+Epoch: 47 | train_loss: 0.2393 | train_acc: 0.9109 | test_loss: 0.4764 | test_acc: 0.8413 | 
+Epoch: 48 | train_loss: 0.2335 | train_acc: 0.9141 | test_loss: 1.0790 | test_acc: 0.6887 | 
+Epoch: 49 | train_loss: 0.2288 | train_acc: 0.9148 | test_loss: 6.0053 | test_acc: 0.3364 | 
+Epoch: 50 | train_loss: 0.2234 | train_acc: 0.9165 | test_loss: 0.8817 | test_acc: 0.7568 | 
+[INFO] Total training time: 10958.224 seconds
+[INFO] Plotting training results...
+[INFO] Training results plot saved as 'out/figures/training_results.png'
+📝 Classification report saved to 'out/tables/classification_report.csv'
+📋 Confusion matrix saved to 'out/tables/confusion_matrix.csv'
+🖼️ Confusion matrix plot saved to 'out/figures/confusion_matrix.png'
+/home/pablosetra/Documents/tfg/hsi-wave-patches/.venv/bin/python3: Error while finding module specification for 'cnn.train.py' (ModuleNotFoundError: __path__ attribute not found on 'cnn.train' while trying to find 'cnn.train.py'). Try using 'cnn.train' instead of 'cnn.train.py' as the module name.

@@ -9,83 +9,65 @@ import gc
 from torchinfo import summary
 from timeit import default_timer as timer
 import matplotlib.pyplot as plt
-from torch.utils.data import DataLoader, random_split
+from torch.utils.data import DataLoader
+from torchvision import transforms
+from torchvision.datasets import ImageFolder
+import pandas as pd
+import seaborn as sns
 from cnn.util.helper_functions import plot_loss_curves
-from cnn.data_setup import WaveletDataset
 
 # Setup hyperparameters
 NUM_EPOCHS = 50
 BATCH_SIZE = 64
 LEARNING_RATE = 0.001
 
-# Setup directories
-train_csv = "train_dataset.csv"
-test_csv = "test_dataset.csv"
-
 # Setup target device with id
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
+train_dir = "data/processed/train"
+test_dir = "data/processed/test"
 
-# Create transforms
-transform = torchvision.transforms.Compose(
-    [
-        torchvision.transforms.ToTensor(),
-        torchvision.transforms.Normalize(
-            mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]
-        ),
-    ]
-)
+# 2. Keep the separate transforms for training and testing
+train_transform = transforms.Compose([
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+])
 
-# Create a single instance of your dataset
-wavelet_dataset = WaveletDataset(csv_file="dataset.csv", transform=transform)
+test_transform = transforms.Compose([
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+])
 
-img_labels = wavelet_dataset.img_labels
+train_dataset = ImageFolder(root=train_dir, transform=train_transform)
+test_dataset = ImageFolder(root=test_dir, transform=test_transform)
 
-print("Image labels DataFrame:")
-print(img_labels)
-class_names = img_labels['class'].unique().tolist()
-print(f"Class names: {class_names}")
+class_names = train_dataset.classes
+print(f"Class names found: {class_names}")
 
-# Decide on the split sizes
-dataset_size = len(wavelet_dataset)
-train_size = int(0.8 * dataset_size)  # 80% train
-test_size = dataset_size - train_size  # 20% test
-
-# Split the dataset
-train_dataset, test_dataset = random_split(wavelet_dataset, [train_size, test_size])
-
-# Create loaders
 train_dataloader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
 test_dataloader = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=False)
 
-# Model setup
-weights = torchvision.models.ResNet50_Weights.DEFAULT
-model = torchvision.models.resnet50(weights=weights).to(device)
+weights = torchvision.models.DenseNet121_Weights.DEFAULT
+model = torchvision.models.densenet121(weights=weights).to(device)
 
-# Freeze all layers except the 2 head
-for param in model.parameters():
-    param.requires_grad = False
+in_features = model.classifier.in_features
 
-for param in model.layer4.parameters():
-    param.requires_grad = True
-
-for param in model.fc.parameters():
-    param.requires_grad = True
-
-torch.manual_seed(42)
-torch.cuda.manual_seed(42)
-
-# Get the number of features from the last layer
-in_features = model.fc.in_features
-
-# Replace the final classifier with a simple linear layer for 4 classes
-model.fc = torch.nn.Linear(in_features=in_features, out_features=len(class_names), bias=True).to(device)
+# Replace the final classifier with the custom head
+model.classifier = torch.nn.Sequential( # type: ignore
+    torch.nn.Linear(in_features, 128),
+    torch.nn.ReLU(),
+    torch.nn.BatchNorm1d(128),
+    torch.nn.Dropout(0.4),
+    torch.nn.Linear(128, 64),
+    torch.nn.ReLU(),
+    torch.nn.Dropout(0.3),
+    torch.nn.Linear(64, len(class_names))
+).to(device)
 
 loss_fn = torch.nn.CrossEntropyLoss()
 
 optimizer = torch.optim.Adam(model.parameters(), lr=LEARNING_RATE)
 
-# # Do a summary *after* freezing the features and changing the output classifier layer (uncomment for actual output)
 summary(
     model,
     input_size=(
@@ -93,17 +75,18 @@ summary(
         3,
         224,
         224,
-    ),  # make sure this is "input_size", not "input_shape" (batch_size, color_channels, height, width)
+    ),
     verbose=1,
     col_names=["input_size", "output_size", "num_params", "trainable"],
     col_width=20,
     row_settings=["var_names"],
 )
 
-# Start the timer
+torch.manual_seed(42)
+torch.cuda.manual_seed(42)
+
 start_time = timer()
 
-# Setup training and save the results
 results = engine.train(
     model=model,
     train_dataloader=train_dataloader,
@@ -116,17 +99,6 @@ results = engine.train(
     class_names=class_names,
 )
 
-# End the timer and print out how long it took
-end_time = timer()
-print(f"[INFO] Total training time: {end_time - start_time:.3f} seconds")
-
-# Plot the training results
-print("[INFO] Plotting training results...")
-plot_loss_curves(results)
-plt.savefig("out/figures/training_results.png", dpi=300, bbox_inches='tight')
-plt.show()
-print("[INFO] Training results plot saved as 'out/figures/training_results.png'")
-
 # After training finishes
 del model
 del optimizer
@@ -137,3 +109,44 @@ del test_dataloader
 gc.collect()
 torch.cuda.empty_cache()
 torch.cuda.synchronize()
+
+# End the timer and print out how long it took
+end_time = timer()
+print(f"[INFO] Total training time: {end_time - start_time:.3f} seconds")
+
+# Save results
+print("[INFO] Plotting training results...")
+plot_loss_curves(results)
+plt.savefig("out/figures/training_results.png", dpi=300, bbox_inches='tight')
+plt.show()
+print("[INFO] Training results plot saved as 'out/figures/training_results.png'")
+
+if "classification_report" in results:
+    report = results["classification_report"][0]
+    df_report = pd.DataFrame(report).transpose()
+    report_filename = "out/tables/classification_report.csv"
+    df_report.to_csv(report_filename, index=True)
+    print(f"📝 Classification report saved to '{report_filename}'")
+
+# Save and Plot Confusion Matrix
+if "confusion_matrix" in results:
+    cm = results["confusion_matrix"][0]
+    df_cm = pd.DataFrame(cm, index=class_names, columns=class_names)
+                
+    # Save to CSV
+    cm_filename_csv = "out/tables/confusion_matrix.csv"
+    df_cm.to_csv(cm_filename_csv, index=True)
+    print(f"📋 Confusion matrix saved to '{cm_filename_csv}'")
+                
+    # Plot and save as PNG
+    plt.figure(figsize=(10, 7))
+    sns.heatmap(df_cm, annot=True, fmt="d", cmap="Blues")
+    plt.title("Confusion Matrix")
+    plt.ylabel("Actual")
+    plt.xlabel("Predicted")
+    cm_filename_png = "out/figures/confusion_matrix.png"
+    plt.savefig(cm_filename_png, dpi=300, bbox_inches="tight")
+    plt.show()
+    print(f"🖼️ Confusion matrix plot saved to '{cm_filename_png}'")
+
+
