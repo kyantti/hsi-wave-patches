@@ -14,9 +14,11 @@ from torchvision import transforms
 from torchvision.datasets import ImageFolder
 import pandas as pd
 import seaborn as sns
+from torch.optim.lr_scheduler import ReduceLROnPlateau
 from cnn.util.helper_functions import plot_loss_curves
 
 # Setup hyperparameters
+experiment_num = 2
 NUM_EPOCHS = 50
 BATCH_SIZE = 64
 LEARNING_RATE = 0.001
@@ -68,13 +70,19 @@ loss_fn = torch.nn.CrossEntropyLoss()
 
 optimizer = torch.optim.Adam(model.parameters(), lr=LEARNING_RATE)
 
+scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=5)
+
+# Get image shape from the dataset
+img, _ = train_dataset[0]
+C, H, W = img.shape
+
 summary(
     model,
     input_size=(
         BATCH_SIZE,
-        3,
-        224,
-        224,
+        C,
+        H,
+        W,
     ),
     verbose=1,
     col_names=["input_size", "output_size", "num_params", "trainable"],
@@ -97,6 +105,7 @@ results = engine.train(
     device=device,
     verbose=True,
     class_names=class_names,
+    scheduler=scheduler,
 )
 
 # After training finishes
@@ -117,14 +126,15 @@ print(f"[INFO] Total training time: {end_time - start_time:.3f} seconds")
 # Save results
 print("[INFO] Plotting training results...")
 plot_loss_curves(results)
-plt.savefig("out/figures/training_results.png", dpi=300, bbox_inches='tight')
+training_results_filename = f"out/figures/experiment_{experiment_num}_training_results.png"
+plt.savefig(training_results_filename, dpi=300, bbox_inches='tight')
 plt.show()
-print("[INFO] Training results plot saved as 'out/figures/training_results.png'")
+print(f"[INFO] Training results plot saved as '{training_results_filename}'")
 
 if "classification_report" in results:
     report = results["classification_report"][0]
     df_report = pd.DataFrame(report).transpose()
-    report_filename = "out/tables/classification_report.csv"
+    report_filename = f"out/tables/experiment_{experiment_num}_classification_report.csv"
     df_report.to_csv(report_filename, index=True)
     print(f"📝 Classification report saved to '{report_filename}'")
 
@@ -134,7 +144,7 @@ if "confusion_matrix" in results:
     df_cm = pd.DataFrame(cm, index=class_names, columns=class_names)
                 
     # Save to CSV
-    cm_filename_csv = "out/tables/confusion_matrix.csv"
+    cm_filename_csv = f"out/tables/experiment_{experiment_num}_confusion_matrix.csv"
     df_cm.to_csv(cm_filename_csv, index=True)
     print(f"📋 Confusion matrix saved to '{cm_filename_csv}'")
                 
@@ -144,7 +154,7 @@ if "confusion_matrix" in results:
     plt.title("Confusion Matrix")
     plt.ylabel("Actual")
     plt.xlabel("Predicted")
-    cm_filename_png = "out/figures/confusion_matrix.png"
+    cm_filename_png = f"out/figures/experiment_{experiment_num}_confusion_matrix.png"
     plt.savefig(cm_filename_png, dpi=300, bbox_inches="tight")
     plt.show()
     print(f"🖼️ Confusion matrix plot saved to '{cm_filename_png}'")

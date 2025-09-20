@@ -4,10 +4,11 @@ Contains functions for training and testing a PyTorch model.
 
 import torch
 
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, List, Tuple, Optional, Union
 from torch.amp import GradScaler  # type: ignore
 
 # Import scikit-learn metrics
+from torch.optim.lr_scheduler import ReduceLROnPlateau, _LRScheduler
 from sklearn.metrics import confusion_matrix, classification_report
 
 
@@ -208,6 +209,7 @@ def train(
     device: torch.device,
     class_names: List[str],
     early_stopping: Optional[EarlyStopping] = None,
+    scheduler: Optional[Union[_LRScheduler, ReduceLROnPlateau]] = None,
 ) -> Dict[str, List]:
     """Trains and tests a PyTorch model with optional mixed precision and early stopping.
 
@@ -228,6 +230,7 @@ def train(
     device: A target device to compute on (e.g. "cuda" or "cpu").
     class_names: A list of the target classes.
     early_stopping: An optional EarlyStopping instance to stop training early.
+    scheduler: An optional learning rate scheduler.
 
     Returns:
     A dictionary of training and testing loss, accuracy, and for the last epoch,
@@ -277,6 +280,13 @@ def train(
         results["train_acc"].append(train_acc)
         results["test_loss"].append(test_loss)
         results["test_acc"].append(test_acc)
+
+        # Step the scheduler
+        if scheduler:
+            if isinstance(scheduler, ReduceLROnPlateau):
+                scheduler.step(test_loss)
+            else:
+                scheduler.step()
 
         # If it's the last epoch, calculate confusion matrix and classification report
         if epoch == epochs - 1:
