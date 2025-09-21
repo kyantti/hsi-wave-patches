@@ -67,18 +67,11 @@ hsi-wave-patches/
 
 ### Wavelet Transform Processing
 
-Process your hyperspectral images with wavelet transforms:
+The wavelet processing pipeline extracts meaningful features from hyperspectral images by applying Continuous Wavelet Transform (CWT) with Morlet wavelets to spectral signatures. The process extracts 32×32 pixel patches from the original hyperspectral images, then divides each patch into 64 sub-patches of 4×4 pixels. For each sub-patch, the mean spectral signature across all pixels is calculated and transformed using CWT to create scalogram representations. This approach reduces dimensionality while preserving important spectral-spatial relationships, generating 64 wavelet-transformed feature maps per original patch that capture frequency content across different spectral bands.
 
 ```bash
 uv run create_wavelets.py
 ```
-
-This script:
-- Loads hyperspectral images from `data/raw/`
-- Applies wavelet transforms (CWT with Morlet wavelet by default)
-- Extracts 32×32 patches with optimal positioning
-- Generates sub-patches (4×4) for detailed analysis
-- Saves processed results to `data/interim/`
 
 ### Model Training
 
