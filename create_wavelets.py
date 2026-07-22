@@ -379,7 +379,7 @@ def process_hyperspectral_image(npy_file_path):
         
         # Create patch visualization
         print(f"Creating patch visualization for {image_name} in class {class_folder}")
-        visualize_patches_on_image(hyperspectral_image, start_row, start_col, image_name, output_subdir)
+        # visualize_patches_on_image(hyperspectral_image, start_row, start_col, image_name, output_subdir)
         
         # Extract mean spectra from 4x4 sub-patches
         patch_spectra = extract_patch_spectra(hyperspectral_image, start_row, start_col)
@@ -389,9 +389,9 @@ def process_hyperspectral_image(npy_file_path):
             print(f"Processing patch {patch_idx + 1}/64 for {image_name}")
             
             # Generate wavelet transform images
-            generate_cwt_images(spectrum, patch_idx, image_name, output_subdir, class_folder)
+            #generate_cwt_images(spectrum, patch_idx, image_name, output_subdir, class_folder)
             # Uncomment the line below if you also want DWT images
-            # generate_dwt_images(spectrum, patch_idx, image_name, output_subdir, class_folder)
+            generate_dwt_images(spectrum, patch_idx, image_name, output_subdir, class_folder)
         
         print(f"Completed processing {npy_file_path}")
         
